@@ -30,6 +30,20 @@ class Course_Progress_Tracker {
     }
 
     public function create_db_table() {
-        // Placeholder for DB table creation logic
-    }
+    global $wpdb;
+    $table = $wpdb->prefix . 'course_progress';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        user_id bigint(20) NOT NULL,
+        course_name varchar(255) NOT NULL,
+        progress int DEFAULT 0,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
+}
+
 }

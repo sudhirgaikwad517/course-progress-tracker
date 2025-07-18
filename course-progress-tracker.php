@@ -21,3 +21,12 @@ function cpt_init_plugin() {
     $plugin->init();
 }
 add_action('plugins_loaded', 'cpt_init_plugin');
+
+// Plugin activation: create table
+register_activation_hook(__FILE__, 'cpt_activate_plugin');
+
+function cpt_activate_plugin() {
+    require_once CPT_PLUGIN_PATH . 'includes/class-course-tracker.php';
+    $plugin = new Course_Progress_Tracker();
+    $plugin->create_db_table();
+}
