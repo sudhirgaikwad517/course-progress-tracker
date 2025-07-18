@@ -33,7 +33,7 @@ class Course_Progress_Tracker {
     exit;
 }
 
-
+    
     public function render_shortcode() {
         ob_start();
         include CPT_PLUGIN_PATH . 'templates/form.php';
@@ -52,8 +52,40 @@ class Course_Progress_Tracker {
     }
 
     public function admin_page_content() {
-        echo '<div class="wrap"><h1>Course Progress Tracker</h1><p>Coming soon...</p></div>';
+    global $wpdb;
+    $table = $wpdb->prefix . 'course_progress';
+
+    $results = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC");
+
+    echo '<div class="wrap">';
+    echo '<h1>Course Progress Entries</h1>';
+
+    if (!empty($results)) {
+        echo '<table class="widefat fixed">';
+        echo '<thead><tr><th>ID</th><th>User ID</th><th>Course Name</th><th>Progress (%)</th></tr></thead>';
+        echo '<tbody>';
+        foreach ($results as $row) {
+            echo '<tr>';
+            echo '<td>' . esc_html($row->id) . '</td>';
+            echo '<td>' . esc_html($row->user_id) . '</td>';
+            echo '<td>' . esc_html($row->course_name) . '</td>';
+            echo '<td>' . esc_html($row->progress) . '%</td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table>';
+    } else {
+        echo '<p>No entries found.</p>';
     }
+
+    echo '</div>';
+    echo '<style>
+    table { margin-top: 20px; }
+    th { background-color: #f0f0f0; }
+    td, th { padding: 8px; }
+</style>';
+
+}
+
 
     public function create_db_table() {
     global $wpdb;
